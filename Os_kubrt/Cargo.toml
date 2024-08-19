@@ -1,0 +1,10 @@
+[package]
+name = "Os_kubrt"
+version = "0.1.0"
+authors = ["Tjoslef <josef.pasek17@gmail.com>"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["staticlib"]
+[dependencies]
