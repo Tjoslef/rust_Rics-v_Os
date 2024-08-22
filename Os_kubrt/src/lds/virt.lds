@@ -47,3 +47,4 @@ SECTIONS
 	PROVIDE(_heap_start = _stack);
 	PROVIDE(_heap_size = _memory_end - _stack);
 }
+	
