@@ -9,6 +9,7 @@ use self::page::{Table, PAGE_SIZE};
 use self::uart::Uart;
 mod uart;
 mod page;
+mod kmem;
 // ///////////////////////////////////
 // / RUST MACROS
 // ///////////////////////////////////
@@ -247,7 +248,16 @@ page::map(
 	             0x0c20_8000,
 	             page::EntryBits::ReadWrite.val(),
 	);
+    page::print_page_allocation();
+    let p = 0x8005_7000 as usize;
+    let m = page::virt_to_phys(&root,p).unwrap(0)
+    println!("Walk 0x{:x} = 0x{:x}", p, m);
+    unsafe{
+    KERNEL_TABLE =root_u;
 
+
+    }
+(root_u >> 12)  | (8 << 60)
 }
 
 fn kmain(){

@@ -1,4 +1,7 @@
+use core::f128::consts;
 use core::{mem::size_of, ptr::null_mut};
+
+use crate::{print, println};
 
 unsafe extern "C" {
 	static HEAP_START: usize;
@@ -147,15 +150,74 @@ pub fn dealloc(ptr: *mut u8) {
 
 		assert!(
 		        (*p).is_last() == true,
-		        "Possible double-free detected! (Not taken found \
+		        "Possible double-free detected! (Not taken found
 		         before last)"
 		);
 
 		(*p).clear();
 	}
 }
+pub fn print_page_allocation(){
+    unsafe {
+        let num_page = HEAP_SIZE / PAGE_SIZE;
+        let mut begg = HEAP_START as *const Page;
+        let end = begg.add(num_page);
+        let alloc_beg = ALLOC_START;
+		let alloc_end = ALLOC_START + num_page * PAGE_SIZE;
+        println!();
+        println!(
+		         "PAGE ALLOCATION TABLE\nMETA: {:p} -> {:p}\nPHYS: \
+		          0x{:x} -> 0x{:x}",
+		         begg, end, alloc_beg, alloc_end
+		);
+
+        println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        let mut num = 0;
+        while begg< end{
+        if(*begg).is_taken(){
+            let start = begg as usize;
+				let memaddr = ALLOC_START
+				              + (start - HEAP_START)
+				                * PAGE_SIZE;
+                print!("0x{:x} => ", memaddr);
+                loop {
+                    num +=1;
+                if (*begg).is_last(){
+                 let memaddr = ALLOC_START
+						              + (end
+						                 - HEAP_START)
+						                * PAGE_SIZE
+						              + PAGE_SIZE - 1; }
+
+                print!(
+                "0x{:x}: {:>3} page(s)",
+						       memaddr,
+						       (end - start + 1)
 
 
+          );
+						println!(".");
+						break;
+					}
+					begg = begg.add(1);
+				}
+			}
+			begg = begg.add(1);
+
+		println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		println!(
+		         "Allocated: {:>5} pages ({:>9} bytes).",
+		         num,
+		         num * PAGE_SIZE
+		);
+		println!(
+		         "Free     : {:>5} pages ({:>9} bytes).",
+		         num_page - num,
+		         (num_page - num) * PAGE_SIZE
+		);
+		println!();
+	}
+}
 #[repr(i64)]
 #[derive(Copy, Clone)]
 pub enum EntryBits {
